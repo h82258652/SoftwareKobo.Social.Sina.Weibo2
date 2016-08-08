@@ -31,10 +31,6 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
             requestUri = uriBuilder.Uri;
 
             var authorizeDialog = new AuthorizeDialog(requestUri);
-
-            var rrf = authorizeDialog.Width;
-            var size = authorizeDialog.Size;
-
             var result = authorizeDialog.ShowDialog();
             if (result == DialogResult.OK)
             {

@@ -1,5 +1,8 @@
-﻿using SoftwareKobo.Social.Sina.Weibo.Core;
+﻿using Newtonsoft.Json;
+using SoftwareKobo.Social.Sina.Weibo.Core;
+using SoftwareKobo.Social.Sina.Weibo.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -48,8 +51,22 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
                     var decoder = new WwwFormUrlDecoder(responseUri.Query);
                     var authorizeCode = decoder.GetFirstValueByName("code");
 
-                    client.HttpPostAsync(new Uri(""), )
+                    var parameters = new Dictionary<string, string>()
+                    {
+                        ["client_id"] = appKey,
+                        ["client_secret"] = appSecret,
+                        ["grant_type"] = "authorization_code",
+                        ["code"] = authorizeCode,
+                        ["redirect_uri"] = redirectUri
+                    };
+                    var json = await client.HttpPostAsync("https://api.weibo.com/oauth2/access_token", parameters);
+                    var accessToken = JsonConvert.DeserializeObject<AccessToken>(json);
 
+                    client.AppKey = appKey;
+                    client.AppSecret = appSecret;
+                    client.RedirectUri = redirectUri;
+                    client.AccessToken = accessToken.Value;
+                    client.Uid = accessToken.Uid;
                     break;
 
                 case WebAuthenticationStatus.UserCancel:
