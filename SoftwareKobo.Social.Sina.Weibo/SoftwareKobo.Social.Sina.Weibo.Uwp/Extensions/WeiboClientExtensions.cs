@@ -3,7 +3,6 @@ using SoftwareKobo.Social.Sina.Weibo.Core;
 using SoftwareKobo.Social.Sina.Weibo.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources.Core;
@@ -19,7 +18,7 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
             var requestUri = new Uri("https://api.weibo.com/oauth2/authorize", UriKind.Absolute);
             var builder = new UriBuilder(requestUri);
             var requestUriDecoder = new WwwFormUrlDecoder(requestUri.Query);
-            var query = new NameValueCollection();
+            var query = new Dictionary<string, string>();
             foreach (var entry in requestUriDecoder)
             {
                 query[entry.Name] = entry.Value;

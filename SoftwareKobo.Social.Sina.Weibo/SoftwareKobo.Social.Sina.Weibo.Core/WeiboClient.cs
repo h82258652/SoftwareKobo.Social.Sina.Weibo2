@@ -18,7 +18,7 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
 
         internal string RedirectUri;
 
-        internal string Uid;
+        public string Uid;
 
         public Task<string> HttpGetAsync(string requestUrl, IDictionary<string, string> parameters)
         {
