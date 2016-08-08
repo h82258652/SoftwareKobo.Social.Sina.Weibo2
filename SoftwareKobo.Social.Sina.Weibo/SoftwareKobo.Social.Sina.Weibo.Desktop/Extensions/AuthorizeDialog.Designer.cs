@@ -37,7 +37,7 @@
             this.webBrowser.Location = new System.Drawing.Point(0, 0);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(284, 261);
+            this.webBrowser.Size = new System.Drawing.Size(597, 343);
             this.webBrowser.TabIndex = 0;
             this.webBrowser.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.WebBrowser_Navigated);
             // 
@@ -45,7 +45,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(597, 343);
             this.Controls.Add(this.webBrowser);
             this.Name = "AuthorizeDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
