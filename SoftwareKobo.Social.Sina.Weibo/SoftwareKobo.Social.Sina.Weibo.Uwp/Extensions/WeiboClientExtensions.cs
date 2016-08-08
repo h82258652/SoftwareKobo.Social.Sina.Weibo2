@@ -75,9 +75,6 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
                 case WebAuthenticationStatus.ErrorHttp:
                     // TODO
                     break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
     }
