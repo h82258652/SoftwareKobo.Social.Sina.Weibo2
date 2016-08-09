@@ -71,6 +71,40 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
             }
         }
 
+        public async Task<Status> UploadAsync(string status, byte[] pic)
+        {
+            if (status == null)
+            {
+                throw new ArgumentNullException(nameof(status));
+            }
+            if (pic == null)
+            {
+                throw new ArgumentNullException(nameof(pic));
+            }
+
+            var content = new MultipartFormDataContent()
+            {
+                {
+                    new StringContent(AccessToken),
+                    "access_token"
+                },
+                {
+                    new StringContent(status),
+                    "status"
+                },
+                {
+                    new ByteArrayContent(pic),
+                    "pic"
+                }
+            };
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsync("https://upload.api.weibo.com/2/statuses/upload.json", content);
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Status>(json);
+            }
+        }
+
         public async Task<User> ShowAsync(long uid)
         {
             var parameters = new Dictionary<string, string>()
