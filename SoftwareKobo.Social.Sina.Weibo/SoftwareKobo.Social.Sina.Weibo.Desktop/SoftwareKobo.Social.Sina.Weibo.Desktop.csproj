@@ -46,6 +46,7 @@
     <Compile Include="Extensions\AuthorizeDialog.Designer.cs">
       <DependentUpon>AuthorizeDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="LocalAccessToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\WeiboClientExtensions.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -53,6 +54,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="WeiboClientDesktop.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SoftwareKobo.Social.Sina.Weibo.Core\SoftwareKobo.Social.Sina.Weibo.Core.csproj">

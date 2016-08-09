@@ -34,5 +34,29 @@ namespace SoftwareKobo.Social.Sina.Weibo.Properties {
                 this["AccessToken"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Uid {
+            get {
+                return ((string)(this["Uid"]));
+            }
+            set {
+                this["Uid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long ExpiresAt {
+            get {
+                return ((long)(this["ExpiresAt"]));
+            }
+            set {
+                this["ExpiresAt"] = value;
+            }
+        }
     }
 }

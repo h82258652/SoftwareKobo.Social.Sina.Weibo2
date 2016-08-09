@@ -10,6 +10,8 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
 {
     public class WeiboClient
     {
+        public string Uid;
+
         internal string AccessToken;
 
         internal string AppKey;
@@ -17,8 +19,6 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
         internal string AppSecret;
 
         internal string RedirectUri;
-
-        public string Uid;
 
         public Task<string> HttpGetAsync(string requestUrl, IDictionary<string, string> parameters)
         {
@@ -71,6 +71,31 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
             }
         }
 
+        public async Task<User> ShowAsync(long uid)
+        {
+            var parameters = new Dictionary<string, string>()
+            {
+                ["uid"] = uid.ToString()
+            };
+            var json = await HttpGetAsync("https://api.weibo.com/2/users/show.json", parameters);
+            return JsonConvert.DeserializeObject<User>(json);
+        }
+
+        public async Task<Status> UpdateAsync(string status)
+        {
+            if (status == null)
+            {
+                throw new ArgumentNullException(nameof(status));
+            }
+
+            var parameters = new Dictionary<string, string>()
+            {
+                ["status"] = status
+            };
+            var json = await HttpPostAsync("https://api.weibo.com/2/statuses/update.json", parameters);
+            return JsonConvert.DeserializeObject<Status>(json);
+        }
+
         public async Task<Status> UploadAsync(string status, byte[] pic)
         {
             if (status == null)
@@ -103,31 +128,6 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 var json = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<Status>(json);
             }
-        }
-
-        public async Task<User> ShowAsync(long uid)
-        {
-            var parameters = new Dictionary<string, string>()
-            {
-                ["uid"] = uid.ToString()
-            };
-            var json = await HttpGetAsync("https://api.weibo.com/2/users/show.json", parameters);
-            return JsonConvert.DeserializeObject<User>(json);
-        }
-
-        public async Task<Status> UpdateAsync(string status)
-        {
-            if (status == null)
-            {
-                throw new ArgumentNullException(nameof(status));
-            }
-
-            var parameters = new Dictionary<string, string>()
-            {
-                ["status"] = status
-            };
-            var json = await HttpPostAsync("https://api.weibo.com/2/statuses/update.json", parameters);
-            return JsonConvert.DeserializeObject<Status>(json);
         }
 
         private IDictionary<string, string> PrepareParameter(IDictionary<string, string> parameters)
