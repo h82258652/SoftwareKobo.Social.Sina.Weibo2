@@ -14,6 +14,23 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
     {
         public static async Task AuthorizeAsync(this WeiboClient client, string appKey, string appSecret, string redirectUri, string scope = null)
         {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            if (appKey == null)
+            {
+                throw new ArgumentNullException(nameof(appKey));
+            }
+            if (appSecret == null)
+            {
+                throw new ArgumentNullException(nameof(appSecret));
+            }
+            if (redirectUri == null)
+            {
+                throw new ArgumentNullException(nameof(redirectUri));
+            }
+
             var requestUri = new Uri("https://api.weibo.com/oauth2/authorize", UriKind.Absolute);
             var uriBuilder = new UriBuilder(requestUri);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);

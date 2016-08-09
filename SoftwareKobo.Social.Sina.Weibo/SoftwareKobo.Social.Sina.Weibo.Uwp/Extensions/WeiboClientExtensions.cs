@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SoftwareKobo.Social.Sina.Weibo.Core;
+using SoftwareKobo.Social.Sina.Weibo.Core.Extensions;
 using SoftwareKobo.Social.Sina.Weibo.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,23 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
     {
         public static async Task AuthorizeAsync(this WeiboClient client, string appKey, string appSecret, string redirectUri, string scope = null)
         {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            if (appKey == null)
+            {
+                throw new ArgumentNullException(nameof(appKey));
+            }
+            if (appSecret == null)
+            {
+                throw new ArgumentNullException(nameof(appSecret));
+            }
+            if (redirectUri == null)
+            {
+                throw new ArgumentNullException(nameof(redirectUri));
+            }
+
             var requestUri = new Uri("https://api.weibo.com/oauth2/authorize", UriKind.Absolute);
             var builder = new UriBuilder(requestUri);
             var requestUriDecoder = new WwwFormUrlDecoder(requestUri.Query);
@@ -38,7 +56,7 @@ namespace SoftwareKobo.Social.Sina.Weibo.Extensions
             {
                 query["language"] = "en";
             }
-            builder.Query = query.ToString();
+            builder.Query = query.ToUriQuery();
             requestUri = builder.Uri;
 
             var result = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, requestUri, new Uri(redirectUri));
