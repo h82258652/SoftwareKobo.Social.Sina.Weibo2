@@ -22,11 +22,11 @@ namespace SoftwareKobo.Social.Sina.Weibo
         {
             get
             {
-                if (Settings.Default.AccessToken == null)
+                if (string.IsNullOrEmpty(Settings.Default.AccessToken))
                 {
                     return false;
                 }
-                if (Settings.Default.Uid == null)
+                if (string.IsNullOrEmpty(Settings.Default.Uid))
                 {
                     return false;
                 }

@@ -1,4 +1,6 @@
-﻿using SoftwareKobo.Social.Sina.Weibo.Core.Extensions;
+﻿using Newtonsoft.Json;
+using SoftwareKobo.Social.Sina.Weibo.Core.Extensions;
+using SoftwareKobo.Social.Sina.Weibo.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,17 +73,17 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
 
         public abstract void ClearAuthorize();
 
-        public Task<string> HttpGetAsync(string api, IDictionary<string, string> parameters)
+        public Task<string> HttpGetAsync(string api, IDictionary<string, string> parameters, bool checkIsAuthorized = true)
         {
             if (api == null)
             {
                 throw new ArgumentNullException(nameof(api));
             }
 
-            return HttpGetAsync(new Uri(api, UriKind.Absolute), parameters);
+            return HttpGetAsync(new Uri(api, UriKind.Absolute), parameters, checkIsAuthorized);
         }
 
-        public async Task<string> HttpGetAsync(Uri api, IDictionary<string, string> parameters)
+        public async Task<string> HttpGetAsync(Uri api, IDictionary<string, string> parameters, bool checkIsAuthorized = true)
         {
             if (api == null)
             {
@@ -92,7 +94,7 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            if (IsAuthorized == false)
+            if (checkIsAuthorized && IsAuthorized == false)
             {
                 await AuthorizeAsync();
             }
@@ -109,27 +111,27 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
             }
         }
 
-        public Task<string> HttpPostAsync(string api, IDictionary<string, string> parameters)
+        public Task<string> HttpPostAsync(string api, IDictionary<string, string> parameters, bool checkIsAuthorized = true)
         {
-            return HttpPostAsync(new Uri(api, UriKind.Absolute), parameters);
+            return HttpPostAsync(new Uri(api, UriKind.Absolute), parameters, checkIsAuthorized);
         }
 
-        public Task<string> HttpPostAsync(Uri api, IDictionary<string, string> parameters)
+        public Task<string> HttpPostAsync(Uri api, IDictionary<string, string> parameters, bool checkIsAuthorized = true)
         {
-            return HttpPostAsync(api, parameters.ToDictionary(temp => temp.Key, temp => (object)temp.Value));
+            return HttpPostAsync(api, parameters.ToDictionary(temp => temp.Key, temp => (object)temp.Value), checkIsAuthorized);
         }
 
-        public Task<string> HttpPostAsync(string api, IDictionary<string, object> parameters)
+        public Task<string> HttpPostAsync(string api, IDictionary<string, object> parameters, bool checkIsAuthorized = true)
         {
             if (api == null)
             {
                 throw new ArgumentNullException(nameof(api));
             }
 
-            return HttpPostAsync(new Uri(api, UriKind.Absolute), parameters);
+            return HttpPostAsync(new Uri(api, UriKind.Absolute), parameters, checkIsAuthorized);
         }
 
-        public async Task<string> HttpPostAsync(Uri api, IDictionary<string, object> parameters)
+        public async Task<string> HttpPostAsync(Uri api, IDictionary<string, object> parameters, bool checkIsAuthorized = true)
         {
             if (api == null)
             {
@@ -140,7 +142,7 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            if (IsAuthorized == false)
+            if (checkIsAuthorized && IsAuthorized == false)
             {
                 await AuthorizeAsync();
             }
@@ -171,6 +173,31 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 var json = await response.Content.ReadAsStringAsync();
                 return json;
             }
+        }
+
+        public async Task<User> ShowAsync(long uid)
+        {
+            var parameters = new Dictionary<string, string>()
+            {
+                ["uid"] = uid.ToString()
+            };
+            var json = await HttpGetAsync("https://api.weibo.com/2/users/show.json", parameters);
+            return JsonConvert.DeserializeObject<User>(json);
+        }
+
+        public async Task<Status> UpdateAsync(string status)
+        {
+            if (status == null)
+            {
+                throw new ArgumentNullException(nameof(status));
+            }
+
+            var parameters = new Dictionary<string, string>()
+            {
+                ["status"] = status
+            };
+            var json = await HttpPostAsync("https://api.weibo.com/2/statuses/update.json", parameters);
+            return JsonConvert.DeserializeObject<Status>(json);
         }
 
         private IDictionary<string, TValue> PrepareParameters<TValue>(IDictionary<string, TValue> parameters) where TValue : class

@@ -72,7 +72,7 @@ namespace SoftwareKobo.Social.Sina.Weibo
                         };
 
                         var requestTime = DateTime.Now;
-                        var json = await HttpPostAsync("https://api.weibo.com/oauth2/access_token", parameters);
+                        var json = await HttpPostAsync("https://api.weibo.com/oauth2/access_token", parameters, false);
                         var accessToken = JsonConvert.DeserializeObject<AccessToken>(json);
 
                         AccessToken = accessToken.Value;

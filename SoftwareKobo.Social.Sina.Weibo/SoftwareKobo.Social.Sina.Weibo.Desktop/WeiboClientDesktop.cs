@@ -16,6 +16,11 @@ namespace SoftwareKobo.Social.Sina.Weibo
     {
         public WeiboClientDesktop(string appKey, string appSecret, string redirectUri, string scope = null) : base(appKey, appSecret, redirectUri, scope)
         {
+            if (LocalAccessToken.IsUseable)
+            {
+                AccessToken = LocalAccessToken.Value;
+                Uid = LocalAccessToken.Uid;
+            }
         }
 
         public override bool IsAuthorized => LocalAccessToken.IsUseable;
@@ -61,7 +66,7 @@ namespace SoftwareKobo.Social.Sina.Weibo
                     };
 
                     var requestTime = DateTime.Now;
-                    var json = await HttpPostAsync("https://api.weibo.com/oauth2/access_token", getAccessTokenQuery);
+                    var json = await HttpPostAsync("https://api.weibo.com/oauth2/access_token", getAccessTokenQuery, false);
                     var accessToken = JsonConvert.DeserializeObject<AccessToken>(json);
 
                     AccessToken = accessToken.Value;

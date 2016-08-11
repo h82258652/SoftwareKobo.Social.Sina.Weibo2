@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using SoftwareKobo.Social.Sina.Weibo;
 using SoftwareKobo.Social.Sina.Weibo.Core;
 using SoftwareKobo.Social.Sina.Weibo.Extensions;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -18,12 +20,15 @@ namespace DesktopDemo
         {
             try
             {
-                var client = new WeiboClient();
-                await client.AuthorizeAsync("393209958", "3c2387aa56497a4ed187f146afc8cb34", "http://bing.coding.io/");
+                var client = new WeiboClientDesktop("393209958", "3c2387aa56497a4ed187f146afc8cb34", "http://bing.coding.io/");
+
+                var status = await client.UpdateAsync("发送测试微博");
+
                 var user = await client.ShowAsync(long.Parse(client.Uid));
                 Image.Source = new BitmapImage(new Uri(user.AvatarHd, UriKind.Absolute));
                 UserTextBox.Text = JsonConvert.SerializeObject(user, Formatting.Indented);
-                MessageBox.Show("finish");
+
+                Debugger.Break();
             }
             catch (Exception ex)
             {
