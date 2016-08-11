@@ -8,8 +8,8 @@
     <Setting Name="Uid" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ExpiresAt" Type="System.Int64" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="ExpiresAt" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

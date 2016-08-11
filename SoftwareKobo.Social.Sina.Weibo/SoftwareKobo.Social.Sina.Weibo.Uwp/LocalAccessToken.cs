@@ -1,5 +1,5 @@
-﻿using SoftwareKobo.Social.Sina.Weibo.Properties;
-using System;
+﻿using System;
+using Windows.Storage;
 
 namespace SoftwareKobo.Social.Sina.Weibo
 {
@@ -9,12 +9,11 @@ namespace SoftwareKobo.Social.Sina.Weibo
         {
             get
             {
-                return Settings.Default.ExpiresAt;
+                return (DateTime)DataContainer.Values["ExpiresAt"];
             }
             set
             {
-                Settings.Default.ExpiresAt = value;
-                Settings.Default.Save();
+                DataContainer.Values["ExpiresAt"] = value;
             }
         }
 
@@ -22,11 +21,11 @@ namespace SoftwareKobo.Social.Sina.Weibo
         {
             get
             {
-                if (Settings.Default.AccessToken == null)
+                if (Value == null)
                 {
                     return false;
                 }
-                if (Settings.Default.Uid == null)
+                if (Uid == null)
                 {
                     return false;
                 }
@@ -38,12 +37,11 @@ namespace SoftwareKobo.Social.Sina.Weibo
         {
             get
             {
-                return Settings.Default.Uid;
+                return (string)DataContainer.Values["Uid"];
             }
             set
             {
-                Settings.Default.Uid = value;
-                Settings.Default.Save();
+                DataContainer.Values["Uid"] = value;
             }
         }
 
@@ -51,12 +49,20 @@ namespace SoftwareKobo.Social.Sina.Weibo
         {
             get
             {
-                return Settings.Default.AccessToken;
+                return (string)DataContainer.Values["AccessToken"];
             }
             set
             {
-                Settings.Default.AccessToken = value;
-                Settings.Default.Save();
+                DataContainer.Values["AccessToken"] = value;
+            }
+        }
+
+        private static ApplicationDataContainer DataContainer
+        {
+            get
+            {
+                // TODO to const
+                return ApplicationData.Current.LocalSettings.CreateContainer("SinaWeibo", ApplicationDataCreateDisposition.Always);
             }
         }
     }

@@ -49,10 +49,9 @@ namespace SoftwareKobo.Social.Sina.Weibo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public long ExpiresAt {
+        public global::System.DateTime ExpiresAt {
             get {
-                return ((long)(this["ExpiresAt"]));
+                return ((global::System.DateTime)(this["ExpiresAt"]));
             }
             set {
                 this["ExpiresAt"] = value;

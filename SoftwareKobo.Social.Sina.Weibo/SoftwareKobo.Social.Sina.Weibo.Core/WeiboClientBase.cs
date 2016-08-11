@@ -9,7 +9,65 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
 {
     public abstract class WeiboClientBase
     {
-        public abstract Task AuthorizeAsync(string appKey, string appSecret, string redirectUri, string scope = null);
+        protected WeiboClientBase(string appKey, string appSecret, string redirectUri, string scope = null)
+        {
+            if (appKey == null)
+            {
+                throw new ArgumentNullException(nameof(appKey));
+            }
+            if (appSecret == null)
+            {
+                throw new ArgumentNullException(nameof(appSecret));
+            }
+            if (redirectUri == null)
+            {
+                throw new ArgumentNullException(nameof(redirectUri));
+            }
+
+            AppKey = appKey;
+            AppSecret = appSecret;
+            RedirectUri = redirectUri;
+            Scope = scope;
+        }
+
+        public abstract bool IsAuthorized
+        {
+            get;
+        }
+
+        public string Uid
+        {
+            get;
+            protected set;
+        }
+
+        protected string AccessToken
+        {
+            get;
+            set;
+        }
+
+        protected string AppKey
+        {
+            get;
+        }
+
+        protected string AppSecret
+        {
+            get;
+        }
+
+        protected string RedirectUri
+        {
+            get;
+        }
+
+        protected string Scope
+        {
+            get;
+        }
+
+        public abstract Task AuthorizeAsync();
 
         public abstract void ClearAuthorize();
 
@@ -34,11 +92,14 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            // TODO check authorize
+            if (IsAuthorized == false)
+            {
+                await AuthorizeAsync();
+            }
 
             var uriBuilder = new UriBuilder(api)
             {
-                Query = parameters.ToUriQuery()
+                Query = PrepareParameters(parameters).ToUriQuery()
             };
             api = uriBuilder.Uri;
 
@@ -79,8 +140,12 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 throw new ArgumentNullException(nameof(parameters));
             }
 
-            // TODO check authorize
+            if (IsAuthorized == false)
+            {
+                await AuthorizeAsync();
+            }
 
+            parameters = PrepareParameters(parameters);
             HttpContent content;
             if (parameters.Any(temp => temp.Value != null && temp.Value is string == false))
             {
@@ -89,14 +154,9 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 {
                     var value = temp.Value;
                     var bytes = value as byte[];
-                    if (bytes != null)
-                    {
-                        postContent.Add(new ByteArrayContent(bytes), temp.Key);
-                    }
-                    else
-                    {
-                        postContent.Add(new StringContent(temp.Value.ToString()), temp.Key);
-                    }
+                    postContent.Add(bytes != null
+                        ? new ByteArrayContent(bytes)
+                        : new StringContent(temp.Value.ToString()), temp.Key);
                 }
                 content = postContent;
             }
@@ -111,6 +171,32 @@ namespace SoftwareKobo.Social.Sina.Weibo.Core
                 var json = await response.Content.ReadAsStringAsync();
                 return json;
             }
+        }
+
+        private IDictionary<string, TValue> PrepareParameters<TValue>(IDictionary<string, TValue> parameters) where TValue : class
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            if (parameters.ContainsKey("client_id") == false)
+            {
+                parameters["client_id"] = AppKey as TValue;
+            }
+            if (parameters.ContainsKey("client_secret") == false)
+            {
+                parameters["client_secret"] = AppSecret as TValue;
+            }
+            if (parameters.ContainsKey("redirect_uri") == false)
+            {
+                parameters["redirect_uri"] = RedirectUri as TValue;
+            }
+            if (parameters.ContainsKey("code") == false)
+            {
+                parameters["access_token"] = AccessToken as TValue;
+            }
+            return parameters;
         }
     }
 }

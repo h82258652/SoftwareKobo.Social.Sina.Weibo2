@@ -108,7 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\WeiboClientExtensions.cs" />
+    <Compile Include="LocalAccessToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WeiboClientUwp.cs" />
     <EmbeddedResource Include="Properties\SoftwareKobo.Social.Sina.Weibo.Uwp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
