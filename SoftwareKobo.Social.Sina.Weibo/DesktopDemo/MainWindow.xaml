@@ -9,22 +9,9 @@
         Height="350"
         mc:Ignorable="d">
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Image x:Name="Image"
-                   Grid.Row="0"
-                   Stretch="None" />
-            <TextBox x:Name="UserTextBox"
-                     Grid.Row="1"
-                     IsReadOnly="True"
-                     TextWrapping="Wrap" />
-        </Grid>
-        <Button HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Click="LoginButton_Click"
-                Content="Login" />
+        <Button HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Click="SendButton_Click"
+                Content="发送微博" />
     </Grid>
 </Window>

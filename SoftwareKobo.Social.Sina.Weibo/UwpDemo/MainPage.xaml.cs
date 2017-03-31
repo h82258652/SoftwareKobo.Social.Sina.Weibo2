@@ -1,31 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Web;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-//“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
+using SoftwareKobo.Social.SinaWeibo;
 
 namespace UwpDemo
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var client = new SinaWeiboClient("393209958", "3c2387aa56497a4ed187f146afc8cb34",
+                    "http://bing.coding.io/");
+
+                var status = await client.ShareAsync("发送测试微博");
+                if (status.ErrorCode == 0)
+                {
+                    await new MessageDialog("发送成功").ShowAsync();
+                }
+                else
+                {
+                    await new MessageDialog("发送失败，错误码：" + status.ErrorCode).ShowAsync();
+                }
+            }
+            catch (UserCancelAuthorizeException)
+            {
+                await new MessageDialog("你取消了授权").ShowAsync();
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog(ex.Message + Environment.NewLine + ex.StackTrace).ShowAsync();
+            }
         }
     }
 }

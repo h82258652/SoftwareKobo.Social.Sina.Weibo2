@@ -1,11 +1,6 @@
-﻿using Newtonsoft.Json;
-using SoftwareKobo.Social.Sina.Weibo;
-using SoftwareKobo.Social.Sina.Weibo.Core;
-using SoftwareKobo.Social.Sina.Weibo.Extensions;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Windows;
-using System.Windows.Media.Imaging;
+using SoftwareKobo.Social.SinaWeibo;
 
 namespace DesktopDemo
 {
@@ -16,19 +11,21 @@ namespace DesktopDemo
             InitializeComponent();
         }
 
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var client = new WeiboClientDesktop("393209958", "3c2387aa56497a4ed187f146afc8cb34", "http://bing.coding.io/");
+                var client = new SinaWeiboClient("393209958", "3c2387aa56497a4ed187f146afc8cb34", "http://bing.coding.io/");
 
-                var status = await client.UpdateAsync("发送测试微博");
-
-                var user = await client.ShowAsync(long.Parse(client.Uid));
-                Image.Source = new BitmapImage(new Uri(user.AvatarHd, UriKind.Absolute));
-                UserTextBox.Text = JsonConvert.SerializeObject(user, Formatting.Indented);
-
-                Debugger.Break();
+                var status = await client.ShareAsync("发送测试微博");
+                if (status.ErrorCode == 0)
+                {
+                    MessageBox.Show("发送成功");
+                }
+                else
+                {
+                    MessageBox.Show("发送失败，错误码：" + status.ErrorCode);
+                }
             }
             catch (Exception ex)
             {
